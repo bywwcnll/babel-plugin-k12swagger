@@ -1,0 +1,24 @@
+{
+  "name": "babel-plugin-k12swagger",
+  "version": "0.0.1",
+  "main": "index.js",
+  "description": "babel plugin for swagger",
+  "keywords": [
+    "babel-plugin", "swagger", "k12swagger"
+  ],
+  "author": "bywwcnll <2233540467@qq.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bywwcnll/babel-plugin-k12swagger"
+  },
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {
+    "lodash.uniq": "^4.5.0"
+  },
+  "devDependencies": {},
+  "engines": {
+    "node": ">= 4.0.0",
+    "npm": ">= 3.0.0"
+  }
+}
