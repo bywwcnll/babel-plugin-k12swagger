@@ -48,7 +48,7 @@ const getSearchVisitor = ( { types: t } ) => {
       ) return
     
       let mapActionsList = node.value.properties
-        .filter(el => t.isSpreadElement(el))
+        .filter(el => /^(SpreadElement|SpreadProperty)$/.test(el.type))
         .filter(el => t.isCallExpression(el.argument))
         .map(el => el.argument)
         .filter(el => t.isIdentifier(el.callee, {name: 'mapActions'}) && el.arguments.length === 2)
