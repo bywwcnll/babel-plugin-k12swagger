@@ -84,7 +84,7 @@ const getSearchVisitor = ( { types: t } ) => {
     visitor: {
       Program (path) {
         let filename = this.file.opts.filename
-        if (/.vue$/.test(filename)) {
+        if (/(\.vue|mixins\/\w+\.js)$/.test(filename)) {
           path.traverse(ObjectPropertyVisitor)
         }
       },
