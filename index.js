@@ -105,7 +105,9 @@ const getSearchVisitor = ( { types: t } ) => {
           ...oldData,
           result: willSavedResult
         }
-        console.log(`已使用的模块: ${Object.keys(saveData.result)}`)
+        if (this.opts.showLog) {
+          console.log(`已使用的模块: ${Object.keys(saveData.result)}`)
+        }
         fs.writeFileSync(tmpDepsFileAbsPath, JSON.stringify(saveData))
       }
     }
@@ -114,6 +116,7 @@ const getSearchVisitor = ( { types: t } ) => {
 
 /* 过滤有效swagger模块 */
 const getFilterVisitor = ( { types: t } ) => {
+  let __showLog = false
   let usedModules = Object.keys(usedModulesData)
   const removeModuleVisitor1 = {
     ObjectProperty (path) {
@@ -125,7 +128,6 @@ const getFilterVisitor = ( { types: t } ) => {
       ) return
       let moduleName = node.key ? node.key.name : ''
       if (usedModules.indexOf(moduleName) === -1 && moduleName !== 'common') {
-        // console.log(`移除Store: ${moduleName}模块\r`)
         path.remove()
       }
     }
@@ -137,7 +139,9 @@ const getFilterVisitor = ( { types: t } ) => {
         || !(parent.source.type === 'StringLiteral' && /^.\/modules\/swagger\//.test(parent.source.value))
         || !(node.local.type === 'Identifier' && usedModules.indexOf(node.local.name) === -1)
       ) return
-      console.log(`移除swagger引用: ${node.local.name}模块\r`)
+      if (__showLog) {
+        console.log(`移除swagger引用: ${node.local.name}模块\r`)
+      }
       parentPath.remove()
     },
     MemberExpression ({node, parentPath}) {
@@ -157,13 +161,16 @@ const getFilterVisitor = ( { types: t } ) => {
         || !t.isIdentifier(parentPath.parent.id, { name: 'actions' })
         || this.usedActions.indexOf(node.key.name) > -1
       ) return
-      console.log(`移除${this.moduleName}模块中的${node.key.name}方法\r`)
+      if (__showLog) {
+        console.log(`移除${this.moduleName}模块中的${node.key.name}方法\r`)
+      }
       path.remove()
     }
   }
   return {
     visitor: {
       Program (path) {
+        __showLog = this.opts.showLog || false
         let filename = this.file.opts.filename
         if (/store.js$/.test(filename)) {
           path.traverse(unusedModulesVisitor)
